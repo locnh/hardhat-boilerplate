@@ -34,6 +34,7 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic: process.env.MNEMONIC,
       },
+      gasPrice: 20000000000
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`,
@@ -55,6 +56,7 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic: process.env.MNEMONIC,
       },
+      gasPrice: 2000000,
     },
     optimisticGoerli: {
       url: `https://optimism-goerli.infura.io/v3/${process.env.INFURA_KEY}`,
@@ -85,7 +87,7 @@ const config: HardhatUserConfig = {
       accounts: { 
         mnemonic: process.env.MNEMONIC, 
       },
-      gasPrice: 2000000000,
+      gasPrice: 200000000,
     },
 
     // Polygon
