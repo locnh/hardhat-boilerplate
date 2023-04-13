@@ -2,6 +2,7 @@ import { config as dotEnvConfig } from "dotenv"
 import { HardhatUserConfig } from "hardhat/config"
 import "@nomicfoundation/hardhat-toolbox"
 import "@nomiclabs/hardhat-etherscan"
+import "@nomiclabs/hardhat-ethers"
 import "hardhat-gas-reporter"
 
 // Load the env configuration
@@ -31,62 +32,46 @@ const config: HardhatUserConfig = {
     mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
       chainId: 1,
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
+      accounts: { mnemonic: process.env.MNEMONIC },
       gasPrice: 20000000000
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
+      accounts: { mnemonic: process.env.MNEMONIC },
     },
     sepolia: {
       url: `https://sepolia.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
+      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // Optimism
     optimisticEthereum: {
       url: `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
       chainId: 10,
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
+      accounts: { mnemonic: process.env.MNEMONIC },
       gasPrice: 2000000,
     },
     optimisticGoerli: {
       url: `https://optimism-goerli.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
+      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // Arbitrum
     arbitrum: {
       url: `https://arbitrum-mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
       chainId: 42161,
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
+      accounts: { mnemonic: process.env.MNEMONIC },
     },
     arbitrumGoerli: {
       url: `https://arbitrum-goerli.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
+      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // Base
     baserli: {
       url: 'https://goerli.base.org',
       chainId: 84531,
-      accounts: { 
-        mnemonic: process.env.MNEMONIC, 
-      },
+      accounts: {  mnemonic: process.env.MNEMONIC, },
       gasPrice: 200000000,
     },
 
@@ -94,15 +79,11 @@ const config: HardhatUserConfig = {
     polygon: {
       url: `https://polygon-mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
       chainId: 137,
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
+      accounts: { mnemonic: process.env.MNEMONIC },
     },
     polygonMumbai: {
       url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-      },
+      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // BNB Chain
@@ -110,17 +91,13 @@ const config: HardhatUserConfig = {
       url: "https://bsc-dataseed.binance.org/",
       chainId: 56,
       gasPrice: 5000000000,
-      accounts: { 
-        mnemonic: process.env.MNEMONIC,
-      }
+      accounts: {  mnemonic: process.env.MNEMONIC }
     },
     bscTestnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
       chainId: 97,
       gasPrice: 10000000000,
-      accounts: { 
-        mnemonic: process.env.MNEMONIC,
-      }
+      accounts: {  mnemonic: process.env.MNEMONIC }
     },
   },
 
@@ -156,3 +133,14 @@ const config: HardhatUserConfig = {
 };
 
 export default config;
+
+task (
+  "signerBalance",
+  "Get the signer balance on specified network",
+  async (_, { ethers }) => {
+    const wallet = ethers.Wallet.fromMnemonic(process.env.MNEMONIC)
+    await ethers.provider.getBalance(wallet.address).then((balance) => {
+      console.log(`${wallet.address} has ${ethers.utils.formatEther(balance)} in balance`);
+    });
+  }
+)
