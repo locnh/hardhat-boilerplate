@@ -31,9 +31,7 @@ const config: HardhatUserConfig = {
     // Ethereum
     mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      chainId: 1,
       accounts: { mnemonic: process.env.MNEMONIC },
-      gasPrice: 20000000000
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`,
@@ -47,9 +45,7 @@ const config: HardhatUserConfig = {
     // Optimism
     optimisticEthereum: {
       url: `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      chainId: 10,
       accounts: { mnemonic: process.env.MNEMONIC },
-      gasPrice: 2000000,
     },
     optimisticGoerli: {
       url: `https://optimism-goerli.infura.io/v3/${process.env.INFURA_KEY}`,
@@ -59,7 +55,6 @@ const config: HardhatUserConfig = {
     // Arbitrum
     arbitrum: {
       url: `https://arbitrum-mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      chainId: 42161,
       accounts: { mnemonic: process.env.MNEMONIC },
     },
     arbitrumGoerli: {
@@ -70,15 +65,18 @@ const config: HardhatUserConfig = {
     // Base
     baserli: {
       url: 'https://goerli.base.org',
-      chainId: 84531,
-      accounts: {  mnemonic: process.env.MNEMONIC, },
-      gasPrice: 200000000,
+      accounts: { mnemonic: process.env.MNEMONIC },
+    },
+
+    // WBTestnet
+    wbTestnet: {
+      url: 'https://rpc-testnet.whitebit.network',
+      accounts: { mnemonic: process.env.MNEMONIC, },
     },
 
     // Polygon
     polygon: {
       url: `https://polygon-mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      chainId: 137,
       accounts: { mnemonic: process.env.MNEMONIC },
     },
     polygonMumbai: {
@@ -89,15 +87,12 @@ const config: HardhatUserConfig = {
     // BNB Chain
     bsc: {
       url: "https://bsc-dataseed.binance.org/",
-      chainId: 56,
+      accounts: { mnemonic: process.env.MNEMONIC },
       gasPrice: 5000000000,
-      accounts: {  mnemonic: process.env.MNEMONIC }
     },
     bscTestnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-      chainId: 97,
-      gasPrice: 10000000000,
-      accounts: {  mnemonic: process.env.MNEMONIC }
+      accounts: { mnemonic: process.env.MNEMONIC },
     },
   },
 
@@ -134,7 +129,7 @@ const config: HardhatUserConfig = {
 
 export default config;
 
-task (
+task(
   "signerBalance",
   "Get the signer balance on specified network",
   async (_, { ethers }) => {

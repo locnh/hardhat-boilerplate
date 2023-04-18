@@ -7,6 +7,7 @@ async function main() {
   await instance.deployed();
 
   console.log('Contract deployed at ' + instance.address);
+  console.log('Transaction: ' + instance.deployTransaction.hash);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
