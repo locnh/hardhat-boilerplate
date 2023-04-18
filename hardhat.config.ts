@@ -1,5 +1,6 @@
 import { config as dotEnvConfig } from "dotenv"
 import { HardhatUserConfig } from "hardhat/config"
+import { BigNumber } from "ethers"
 import "@nomicfoundation/hardhat-toolbox"
 import "@nomiclabs/hardhat-etherscan"
 import "@nomiclabs/hardhat-ethers"
@@ -129,12 +130,14 @@ const config: HardhatUserConfig = {
 
 export default config;
 
+
+declare var task: any
 task(
   "signerBalance",
   "Get the signer balance on specified network",
-  async (_, { ethers }) => {
+  async (_: any, { ethers }) => {
     const wallet = ethers.Wallet.fromMnemonic(process.env.MNEMONIC)
-    await ethers.provider.getBalance(wallet.address).then((balance) => {
+    await ethers.provider.getBalance(wallet.address).then((balance: BigNumber) => {
       console.log(`${wallet.address} has ${ethers.utils.formatEther(balance)} in balance`);
     });
   }
