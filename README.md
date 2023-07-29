@@ -19,6 +19,11 @@ BLOCKSCOUT_KEY=1298udhj-2ue8-0jdi-12d9-8ju9102dj901
 REPORT_GAS=true
 ```
 
+* Check balance on specified network, eg `base-mainnet`
+```bash
+npx hardhat signerBalance --network base
+```
+
 * Deploy the contract to the specified network, refer to the `hardhat.config.ts` for the network mapping, example deploy to `sepolia` netowrk:
 ```bash
 npx hardhat run scripts/deploy.ts --network sepolia
