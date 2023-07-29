@@ -1,10 +1,10 @@
-import { config as dotEnvConfig } from "dotenv"
-import { HardhatUserConfig } from "hardhat/config"
-import { BigNumber } from "ethers"
-import "@nomicfoundation/hardhat-toolbox"
-import "@nomiclabs/hardhat-etherscan"
-import "@nomiclabs/hardhat-ethers"
-import "hardhat-gas-reporter"
+import { config as dotEnvConfig } from "dotenv";
+import { HardhatUserConfig } from "hardhat/config";
+import { BigNumber } from "ethers";
+import "@nomicfoundation/hardhat-toolbox";
+import "@nomiclabs/hardhat-etherscan";
+import "@nomiclabs/hardhat-ethers";
+import "hardhat-gas-reporter";
 
 // Load the env configuration
 dotEnvConfig();
@@ -64,15 +64,21 @@ const config: HardhatUserConfig = {
     },
 
     // Base
+
+    base: {
+      url: "https://mainnet.base.org",
+      accounts: { mnemonic: process.env.MNEMONIC },
+      gasPrice: 1500000050,
+    },
     baserli: {
-      url: 'https://goerli.base.org',
+      url: "https://goerli.base.org",
       accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // WBTestnet
     wbTestnet: {
-      url: 'https://rpc-testnet.whitebit.network',
-      accounts: { mnemonic: process.env.MNEMONIC, },
+      url: "https://rpc-testnet.whitebit.network",
+      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // Polygon
@@ -99,18 +105,19 @@ const config: HardhatUserConfig = {
 
   etherscan: {
     apiKey: {
-      "mainnet": process.env.ETHER_SCAN_KEY as string,
-      "goerli": process.env.ETHER_SCAN_KEY as string,
-      "sepolia": process.env.ETHER_SCAN_KEY as string,
-      "bsc": process.env.BSC_SCAN_KEY as string,
-      "bscTestnet": process.env.BSC_SCAN_KEY as string,
-      "optimisticEthereum": process.env.OPTIMISTIC_SCAN_KEY as string,
-      "optimisticGoerli": process.env.OPTIMISTIC_SCAN_KEY as string,
-      "arbitrumOne": process.env.ARBI_SCAN_KEY as string,
-      "arbitrumGoerli": process.env.ARBI_SCAN_KEY as string,
-      "polygon": process.env.POLYGON_SCAN_KEY as string,
-      "polygonMumbai": process.env.POLYGON_SCAN_KEY as string,
-      "baserli": "NO NEED API KEY FOR THIS TESTNET",
+      mainnet: process.env.ETHER_SCAN_KEY as string,
+      goerli: process.env.ETHER_SCAN_KEY as string,
+      sepolia: process.env.ETHER_SCAN_KEY as string,
+      bsc: process.env.BSC_SCAN_KEY as string,
+      bscTestnet: process.env.BSC_SCAN_KEY as string,
+      optimisticEthereum: process.env.OPTIMISTIC_SCAN_KEY as string,
+      optimisticGoerli: process.env.OPTIMISTIC_SCAN_KEY as string,
+      arbitrumOne: process.env.ARBI_SCAN_KEY as string,
+      arbitrumGoerli: process.env.ARBI_SCAN_KEY as string,
+      polygon: process.env.POLYGON_SCAN_KEY as string,
+      polygonMumbai: process.env.POLYGON_SCAN_KEY as string,
+      base: process.env.BASE_SCAN_KEY as string,
+      baserli: "NO NEED API KEY FOR THIS TESTNET",
     },
     customChains: [
       {
@@ -118,27 +125,40 @@ const config: HardhatUserConfig = {
         chainId: 84531,
         urls: {
           apiURL: "https://api-goerli.basescan.org/api",
-          browserURL: "https://goerli.basescan.org"
-        }
+          browserURL: "https://goerli.basescan.org",
+        },
       },
-    ]
+      {
+        network: "base",
+        chainId: 8453,
+        urls: {
+          apiURL: "https://api.basescan.org/api",
+          browserURL: "https://basescan.org",
+        },
+      },
+    ],
   },
   gasReporter: {
-    enabled: (process.env.REPORT_GAS) ? true : false,
-  }
+    enabled: process.env.REPORT_GAS ? true : false,
+  },
 };
 
 export default config;
 
-
-declare var task: any
+declare var task: any;
 task(
   "signerBalance",
   "Get the signer balance on specified network",
   async (_: any, { ethers }) => {
-    const wallet = ethers.Wallet.fromMnemonic(process.env.MNEMONIC)
-    await ethers.provider.getBalance(wallet.address).then((balance: BigNumber) => {
-      console.log(`${wallet.address} has ${ethers.utils.formatEther(balance)} in balance`);
-    });
+    const wallet = ethers.Wallet.fromMnemonic(process.env.MNEMONIC);
+    await ethers.provider
+      .getBalance(wallet.address)
+      .then((balance: BigNumber) => {
+        console.log(
+          `${wallet.address} has ${ethers.utils.formatEther(
+            balance
+          )} in balance`
+        );
+      });
   }
-)
+);
