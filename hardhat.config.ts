@@ -4,6 +4,7 @@ import { BigNumber } from "ethers";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-ethers";
+import "@openzeppelin/hardhat-upgrades";
 import "hardhat-gas-reporter";
 
 // Load the env configuration
@@ -149,7 +150,8 @@ declare var task: any;
 task(
   "signerBalance",
   "Get the signer balance on specified network",
-  async (_: any, { ethers }) => {
+  async () => {
+    const { ethers } = require("hardhat");
     const wallet = ethers.Wallet.fromMnemonic(process.env.MNEMONIC);
     await ethers.provider
       .getBalance(wallet.address)
@@ -162,3 +164,56 @@ task(
       });
   }
 );
+
+task("balance", "Prints an account's balance")
+  .addParam("address", "The account's address")
+  .setAction(async (taskArgs) => {
+    const { ethers } = require("hardhat");
+
+    const balance = await ethers.provider.getBalance(taskArgs.address);
+
+    console.log(ethers.utils.formatEther(balance), "ETH");
+  });
+
+task("deploy", "Deploy contract")
+  .addFlag("upgradable", "The contract is upgradable as proxy and factory")
+  .addParam("contractName", "The contract's name")
+  .setAction(async (taskArgs) => {
+    const { ethers, upgrades } = require("hardhat");
+
+    const ContractFactory = await ethers.getContractFactory(
+      taskArgs.contractName
+    );
+
+    if (!taskArgs.upgradable) {
+      const contract = await ContractFactory.deploy();
+      await contract.deployed();
+
+      console.log(`Contract deployed at ${contract.address}`);
+      console.log(`Transaction: ${contract.deployTransaction.hash}`);
+    } else {
+      const contract = await upgrades.deployProxy(ContractFactory);
+      await contract.deployed();
+
+      console.log(`Contract deployed as proxy at ${contract.addres}`);
+      console.log(`Transaction: ${contract.deployTransaction.hash}`);
+    }
+  });
+
+task("upgrade", "Upgrade factory contract")
+  .addParam("contractName", "The Factory contract name to deploy")
+  .addParam("proxyAddress", "The Proxy contract address to upgrade")
+  .setAction(async (taskArgs) => {
+    const { ethers, upgrades } = require("hardhat");
+
+    const ContractFactory = await ethers.getContractFactory(
+      taskArgs.contractName
+    );
+
+    const contract = await upgrades.upgradeProxy(
+      taskArgs.contractAddress,
+      ContractFactory
+    );
+
+    console.log(`Transaction: ${contract.deployTransaction.hash}`);
+  });

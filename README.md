@@ -26,7 +26,7 @@ npx hardhat signerBalance --network base
 
 * Deploy the contract to the specified network, refer to the `hardhat.config.ts` for the network mapping, example deploy to `sepolia` netowrk:
 ```bash
-npx hardhat run scripts/deploy.ts --network sepolia
+npx hardhat deploy --network sepolia --contract-name MyToken
 ```
 
 * Verify the deployed contract
