@@ -97,6 +97,6 @@ contract MyToken is
     }
 
     function decimals() public view virtual override returns (uint8) {
-        return 8;
+        return 6;
     }
 }

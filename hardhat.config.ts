@@ -1,5 +1,6 @@
 import { config as dotEnvConfig } from "dotenv";
 import { HardhatUserConfig } from "hardhat/config";
+import type { HttpNetworkUserConfig } from "hardhat/types";
 import { BigNumber } from "ethers";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-etherscan";
@@ -10,14 +11,30 @@ import "hardhat-gas-reporter";
 // Load the env configuration
 dotEnvConfig();
 
+const primarySolidityVersion = process.env.SOLIDITY_VERSION || "0.7.6";
+const soliditySettings = process.env.SOLIDITY_SETTINGS
+  ? JSON.parse(process.env.SOLIDITY_SETTINGS)
+  : undefined;
+
+const DEFAULT_MNEMONIC =
+  "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
+
+const sharedNetworkConfig: HttpNetworkUserConfig = {};
+if (process.env.PK) {
+  sharedNetworkConfig.accounts = [process.env.PK];
+} else {
+  sharedNetworkConfig.accounts = {
+    mnemonic: process.env.MNEMONIC || DEFAULT_MNEMONIC,
+  };
+}
+
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.18",
-    settings: {
-      optimizer: {
-        enabled: true,
-      },
-    },
+    compilers: [
+      { version: primarySolidityVersion, settings: soliditySettings },
+      { version: "0.6.12" },
+      { version: "0.5.17" },
+    ],
   },
 
   networks: {
@@ -32,75 +49,76 @@ const config: HardhatUserConfig = {
 
     // Ethereum
     mainnet: {
+      ...sharedNetworkConfig,
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
     goerli: {
+      ...sharedNetworkConfig,
       url: `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
     sepolia: {
+      ...sharedNetworkConfig,
       url: `https://sepolia.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // Optimism
     optimisticEthereum: {
+      ...sharedNetworkConfig,
       url: `https://optimism-mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
     optimisticGoerli: {
+      ...sharedNetworkConfig,
       url: `https://optimism-goerli.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // Arbitrum
     arbitrum: {
+      ...sharedNetworkConfig,
       url: `https://arbitrum-mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
     arbitrumGoerli: {
+      ...sharedNetworkConfig,
       url: `https://arbitrum-goerli.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // Base
 
     base: {
+      ...sharedNetworkConfig,
       url: "https://mainnet.base.org",
-      accounts: { mnemonic: process.env.MNEMONIC },
       gasPrice: 1500000050,
     },
     baserli: {
+      ...sharedNetworkConfig,
       url: "https://goerli.base.org",
-      accounts: { mnemonic: process.env.MNEMONIC },
+      gasPrice: 150000000,
     },
 
     // WBTestnet
     wbTestnet: {
+      ...sharedNetworkConfig,
       url: "https://rpc-testnet.whitebit.network",
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // Polygon
     polygon: {
+      ...sharedNetworkConfig,
       url: `https://polygon-mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
     polygonMumbai: {
+      ...sharedNetworkConfig,
       url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
 
     // BNB Chain
     bsc: {
+      ...sharedNetworkConfig,
       url: "https://bsc-dataseed.binance.org/",
-      accounts: { mnemonic: process.env.MNEMONIC },
       gasPrice: 5000000000,
     },
     bscTestnet: {
+      ...sharedNetworkConfig,
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-      accounts: { mnemonic: process.env.MNEMONIC },
     },
   },
 
